@@ -23,7 +23,7 @@
     <azure.functions.maven.plugin.version>1.42.0</azure.functions.maven.plugin.version>
     <azure.identity.version>1.18.4</azure.identity.version>
     <azure.servicebus.version>7.17.19</azure.servicebus.version>
-    <jackson.version>2.19.0</jackson.version>
+    <jackson.version>2.21.5</jackson.version>
     <junit.version>5.13.4</junit.version>
     <micronaut.platform.version>4.10.17</micronaut.platform.version>
     <mongodb.driver.version>5.9.0</mongodb.driver.version>
