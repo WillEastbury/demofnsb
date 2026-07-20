@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "FUNCTIONS_EXTENSION_VERSION": "~4",
+
+    "AttributeStatusTopicName": "attribute-status",
+    "AttributeStatusSubscriptionName": "attribute-status-writer",
+    "AttributeStatusTableName": "AttributeStatus",
+    "AttributeStatusPartitionKeyField": "siteId",
+    "AttributeStatusRowKeyField": "attributeId",
+
+    "serviceBus_connectionString": "REPLACE_WITH_SERVICE_BUS_CONNECTION_STRING",
+    "tableStorage_connectionString": "UseDevelopmentStorage=true"
+  }
+}

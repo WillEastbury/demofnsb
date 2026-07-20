@@ -1,0 +1,5 @@
+**/target/
+**/local.settings.json
+**/.funcignore.generated
+.idea/
+.vscode/*.log

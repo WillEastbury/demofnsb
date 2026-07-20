@@ -1,0 +1,127 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_attribute_status_messages_are_available": {
+        "type": "ServiceProvider",
+        "inputs": {
+          "parameters": {
+            "topicName": "@appsetting('AttributeStatusTopicName')",
+            "subscriptionName": "@appsetting('AttributeStatusSubscriptionName')",
+            "isSessionsEnabled": false
+          },
+          "serviceProviderConfiguration": {
+            "connectionName": "serviceBus",
+            "operationId": "receiveTopicMessages",
+            "serviceProviderId": "/serviceProviders/serviceBus"
+          }
+        },
+        "splitOn": "@triggerOutputs()?['body']"
+      }
+    },
+    "actions": {
+      "Parse_attribute_status_message": {
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@triggerBody()?['contentData']",
+          "schema": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "runAfter": {}
+      },
+      "Required_keys_are_present": {
+        "type": "If",
+        "expression": {
+          "and": [
+            {
+              "not": {
+                "equals": [
+                  "@body('Parse_attribute_status_message')?[appsetting('AttributeStatusPartitionKeyField')]",
+                  null
+                ]
+              }
+            },
+            {
+              "not": {
+                "equals": [
+                  "@string(body('Parse_attribute_status_message')?[appsetting('AttributeStatusPartitionKeyField')])",
+                  ""
+                ]
+              }
+            },
+            {
+              "not": {
+                "equals": [
+                  "@body('Parse_attribute_status_message')?[appsetting('AttributeStatusRowKeyField')]",
+                  null
+                ]
+              }
+            },
+            {
+              "not": {
+                "equals": [
+                  "@string(body('Parse_attribute_status_message')?[appsetting('AttributeStatusRowKeyField')])",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        "actions": {
+          "Upsert_attribute_status_entity": {
+            "type": "ServiceProvider",
+            "inputs": {
+              "parameters": {
+                "tableName": "@appsetting('AttributeStatusTableName')",
+                "entity": {
+                  "PartitionKey": "@{string(body('Parse_attribute_status_message')?[appsetting('AttributeStatusPartitionKeyField')])}",
+                  "RowKey": "@{string(body('Parse_attribute_status_message')?[appsetting('AttributeStatusRowKeyField')])}",
+                  "Payload": "@{string(body('Parse_attribute_status_message'))}",
+                  "SourceMessageId": "@{coalesce(triggerBody()?['messageId'], triggerBody()?['messageid'], triggerBody()?['MessageId'])}",
+                  "SourceCorrelationId": "@{coalesce(triggerBody()?['correlationId'], triggerBody()?['correlationid'], triggerBody()?['CorrelationId'])}",
+                  "SourceEnqueuedAt": "@{coalesce(triggerBody()?['enqueuedTimeUtc'], triggerBody()?['enqueuedTime'], utcNow())}"
+                }
+              },
+              "serviceProviderConfiguration": {
+                "connectionName": "azureTables",
+                "operationId": "upsertEntity",
+                "serviceProviderId": "/serviceProviders/azureTables"
+              },
+              "retryPolicy": {
+                "type": "exponential",
+                "count": 4,
+                "interval": "PT5S",
+                "minimumInterval": "PT5S",
+                "maximumInterval": "PT1M"
+              }
+            }
+          }
+        },
+        "else": {
+          "actions": {
+            "Reject_invalid_attribute_status_message": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed",
+                "runError": {
+                  "code": "InvalidAttributeStatusMessage",
+                  "message": "The configured partition-key or row-key field is missing or blank."
+                }
+              }
+            }
+          }
+        },
+        "runAfter": {
+          "Parse_attribute_status_message": [
+            "Succeeded"
+          ]
+        }
+      }
+    },
+    "outputs": {}
+  },
+  "kind": "Stateful"
+}
