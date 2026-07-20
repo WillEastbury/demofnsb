@@ -1,0 +1,6 @@
+{
+  "partitionId": "tenant-123",
+  "entityId": "entity-456",
+  "state": "ready",
+  "occurredAt": "2026-07-20T17:45:00Z"
+}

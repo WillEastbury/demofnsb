@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: message-writer
+  namespace: message-persistence-sample
+data:
+  MessageTopicName: sample-events
+  MessageSubscriptionName: message-writer
+  ServiceBusConnection__fullyQualifiedNamespace: REPLACE.servicebus.windows.net
+  ServiceBusFullyQualifiedNamespace: REPLACE.servicebus.windows.net
+
+  MessageTarget: tables
+  MessagePartitionKeyField: partitionId
+  MessageRowKeyField: entityId
+  MessageMaxConcurrentCalls: "1"
+
+  MessageTableServiceUri: https://REPLACE.table.core.windows.net
+  MessageTableName: MessageProjection
+  MessageEncodeTableKeys: "false"
+
+  MessageMongoDatabase: messageSample
+  MessageMongoCollection: messages
+
+  AzureWebJobsStorage__blobServiceUri: https://REPLACE.blob.core.windows.net
+  AzureWebJobsStorage__queueServiceUri: https://REPLACE.queue.core.windows.net
+  AzureWebJobsStorage__tableServiceUri: https://REPLACE.table.core.windows.net
+  FUNCTIONS_WORKER_RUNTIME: java
+  HealthPort: "8080"
