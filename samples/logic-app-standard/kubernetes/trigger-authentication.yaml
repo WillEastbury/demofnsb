@@ -1,0 +1,10 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: message-writer-service-bus
+  namespace: message-persistence-sample
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: message-writer-logic-app
+      key: kedaServiceBusConnectionString

@@ -91,6 +91,6 @@ for side-by-side evaluation.
 
 ## Kubernetes option
 
-For a supported Kubernetes deployment, use Logic Apps Standard **Hybrid** on an
-Azure Arc-enabled Kubernetes cluster. See
+The sample can also be packaged in an Azure Functions container and scaled from
+the Service Bus subscription with KEDA. See
 [`kubernetes\README.md`](kubernetes/README.md).

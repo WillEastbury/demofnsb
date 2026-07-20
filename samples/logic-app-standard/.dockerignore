@@ -1,6 +1,6 @@
-.git*
+.git
+.gitignore
 .vscode
-Dockerfile
 kubernetes
 local.settings.json
 README.md

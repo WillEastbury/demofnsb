@@ -64,10 +64,10 @@ The no-code sample uses the built-in `receiveTopicMessages` Service Bus trigger
 and Azure Tables `upsertEntity` action. It runs on the Logic Apps workflow
 runtime through `Microsoft.Azure.Functions.ExtensionBundle.Workflows`.
 
-For Kubernetes, the supported option is Logic Apps Standard Hybrid on an Azure
-Arc-enabled Kubernetes cluster with the Azure Container Apps extension. The
-sample includes a deployment outline under
-`samples/logic-app-standard/kubernetes`.
+For Kubernetes, the sample packages the workflow runtime in an Azure Functions
+container and uses KEDA to scale from the Service Bus subscription. This is an
+experimental, community-supported hosting option. The Dockerfile and manifests
+are under `samples/logic-app-standard/kubernetes`.
 
 ## Datastore choices
 

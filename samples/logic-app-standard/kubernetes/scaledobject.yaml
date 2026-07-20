@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: message-writer-logic-app
+  namespace: message-persistence-sample
+spec:
+  scaleTargetRef:
+    name: message-writer-logic-app
+  pollingInterval: 15
+  cooldownPeriod: 60
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        topicName: sample-events
+        subscriptionName: message-writer
+        messageCount: "5"
+        activationMessageCount: "0"
+      authenticationRef:
+        name: message-writer-service-bus

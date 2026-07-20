@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: message-writer-logic-app
+  namespace: message-persistence-sample
+data:
+  FUNCTIONS_WORKER_RUNTIME: node
+  FUNCTIONS_EXTENSION_VERSION: "~4"
+  AzureWebJobsFeatureFlags: EnableMultiLanguageWorker
+  AzureWebJobsSecretStorageType: Files
+  APP_KIND: workflowapp
+  WEBSITE_SITE_NAME: message-writer-logic-app
+
+  MessageTopicName: sample-events
+  MessageSubscriptionName: message-writer
+  MessageTableName: MessageProjection
+  MessagePartitionKeyField: partitionId
+  MessageRowKeyField: entityId
